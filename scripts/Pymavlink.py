@@ -42,7 +42,7 @@ def main():
     BAUD=57600
     COM="/dev/ttyACM0"
     UDP="udp:127.0.0.1:14550"
-    LOCAL="tcp://localhost:5555"
+    LOCAL="tcp://0.0.0.0:5555"
     master, socket = initialize(COM, BAUD, UDP, LOCAL)
     
     while True:

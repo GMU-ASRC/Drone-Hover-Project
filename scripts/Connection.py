@@ -42,7 +42,7 @@ def fetch_params(master, params, values):
 def main():
     TCP = "tcp://0.0.0.0:5555"
     UDP = "udp:127.0.0.1:14550"
-    PARAMS=["ATTITUDE", ]
+    PARAMS=["ATTITUDE"]
     VALS=["yaw", "roll"]
     master, socket = initialize(UDP, TCP)
     print("initialization complete")

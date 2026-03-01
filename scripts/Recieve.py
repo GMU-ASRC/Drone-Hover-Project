@@ -38,6 +38,13 @@ def get_values(message, value):
     except KeyError as error:
         return None
     
+def send_len_vals(socket2, values):
+    socket2.send(msgpack.packb(len(values)))
+    
+    message = socket2.recv()
+    print(message)
+    
+    
 def init_timestamps(num):
     stamps = []
     for i in range(num):
@@ -50,9 +57,10 @@ def send_vectors(socket2, ax):
         timestamp = list(vect[i].get_xdata())
         val = list(vect[i].get_ydata())
         print(timestamp)
-        t = msgpack.packb(timestamp)
-        val = msgpack.packb(val)
-        socket2.send(val)
+        send_list = [timestamp, val]
+        send_list = msgpack.packb(send_list)
+        # val = msgpack.packb(val)
+        socket2.send(send_list)
         
         time.sleep(1)
 
@@ -71,10 +79,10 @@ def update_list(vect, values, cur_time, ax, fig, stamps):
     fig.canvas.flush_events()
 
 def main():
-    DT = 0.5
+    DT = 0.1
     timestep = 0
     PARAMS=["GPS_RAW_INT", "GPS_RAW_INT"]
-    Values=["alt", "lat"]
+    Values=["alt", "alt"]
     LOCAL="tcp://localhost:5555"
     LOCAL2="tcp://localhost:5000"
     socket, socket2 = initialize(LOCAL, LOCAL2)
@@ -84,7 +92,7 @@ def main():
     stamps = init_timestamps(len(Values))
 
 
-    while timestep < 5:
+    while timestep < 15:
         cur_time = time.time()
         for i in range(len(PARAMS)):
             message = fetch_params(socket, PARAMS[i])
@@ -96,7 +104,7 @@ def main():
         timestep += DT
         print(timestep)
         time.sleep(DT)
-        
+    send_len_vals(socket2, Values)    
     send_vectors(socket2, ax)
 
     
